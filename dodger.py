@@ -52,13 +52,20 @@ class LessCleverPlayer(Player):
         self.pos = max(0, min(9, self.pos))
         return self.pos
 
-class LearningPlayer(Player):
+class LearningPlayer(Player):    
     # Note imcompat with this files gameplay
-    def update(self, action):
+    def update(self, dangers):
+        # call external code
+        action = model.evaluate(state)\
         self.pos += action
-        return self.pos
-    def evaluation(self, session, graph_ops, saver):
-        pass
+        
+        if self.pos < 0:
+            self.pos = 0
+        if self.pos > 9:
+            self.pos = 9
+
+    def init_model(model):
+        self.model = model
 
 class GeneticPlayer(Player):
     """docstring for GeneticPlayer"""
@@ -82,7 +89,7 @@ class Game(object):
     def step():
         if not self.alive:
             return -1
-        # player.update(self.dangers)       
+        player.update(self.dangers)       
 
         # Move danger onto board and check for death
         if DANGERS[player.pos] == 1:
