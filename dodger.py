@@ -27,6 +27,11 @@ class CleverPlayer(Player):
                     self.pos -= 1
                 else:
                     self.pos += 1
+        else:
+            if self.pos > 5 and not dangers[self.pos-1]:
+                self.pos -= 1
+            elif self.pos < 5 and not dangers[self.pos+1]:
+                self.pos += 1
         self.pos = max(0, min(9, self.pos))
         return self.pos
 
@@ -54,14 +59,13 @@ class GeneticPlayer(Player):
     def update(self, danger_ind):
         pass
 def game(board_size, player):
-    board_size = board_size
     BOARD = list(range(board_size))
     DANGERS = [0 for _ in range(board_size)]
     score = 0
     while True:
         # s = ""
         # for i in DANGERS:
-            # s += str(i)
+        #     s += str(i)
         # print(s)
         # print("_"*player.pos + "o" + "_"*(board_size - player.pos -1))
         # print()
@@ -75,12 +79,18 @@ def game(board_size, player):
 
         # Reset dangers, and add a danger
         DANGERS = [0 for _ in range(board_size)]
-        for i in range(score//10):
+        for i in range(score//10 + 1):
             danger = random.randint(0,9)
             DANGERS[danger] = 1
 
         score += 1
     return score
-bob = LessCleverPlayer(5)
+
+# Run single time
+# bob = CleverPlayer(5)
+# print(game(10, bob))
+
+# Run the whole averaging thing
+bob = CleverPlayer(5)
 l = [game(10, bob) for _ in range(10000)]
-print(sum(l)/len(l))
+print(sum(l)/float(len(l)))
